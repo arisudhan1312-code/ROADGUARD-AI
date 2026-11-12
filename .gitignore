@@ -1,22 +1,38 @@
+# Secrets — NEVER commit
+backend/.env
+.env
+*.env
+!.env.example
+vapid_private_key.pem
+vapid_public_key.pem
+
 # Python
 __pycache__/
 *.py[cod]
-*.pyd
+*.pyo
 .venv/
 venv/
+env/
+*.egg-info/
+dist/
+build/
 
-# Local configuration and secrets
-.env
-.env.*
-!.env.example
+# Uploads (user data)
 backend/uploads/
 backend/detection_uploads/
-backend/models/*.pt
-backend/models/*.pth
-backend/models/*.onnx
-backend/models/*.weights
 
-# Editor / operating system
-.vscode/
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+
+# Node
+node_modules/

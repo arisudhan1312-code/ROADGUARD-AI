@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS roadguard_ai
+﻿CREATE DATABASE IF NOT EXISTS roadguard_ai
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
@@ -364,14 +364,14 @@ WHERE role = 'worker';
 -- -----------------------------------------------------------------------
 -- Bootstrap admin account
 -- Email   : ariharasudhan1312@gmail.com
--- Password: arisudhan2008  (Werkzeug pbkdf2:sha256 hash, 260000 iterations)
+-- Password: arisudhan2008  (Werkzeug pbkdf2:sha256 hex format, 260000 iterations)
 -- -----------------------------------------------------------------------
 INSERT IGNORE INTO users (full_name, email, mobile, password_hash, role, status)
 VALUES (
   'Admin',
   'ariharasudhan1312@gmail.com',
   '0000000000',
-  'pbkdf2:sha256:260000$r1hCgkmCfcomKEP8tw72PA==$yjgGVIos44noE4VJVPuMvWTu5BG+OZJmQRgQELh5RPI=',
+  'pbkdf2:sha256:260000$kYY1O6zu7fJ2YtFP$9f4128f9b772781cdca7c75c27ea47582ead82f691ec7a01587b42ed812789ad',
   'admin',
   'active'
 );

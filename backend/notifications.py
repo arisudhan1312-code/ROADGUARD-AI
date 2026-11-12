@@ -282,3 +282,150 @@ def create_hazard_warning():
             "created": created,
         }
     ), 201 if created else 200
+
+
+@notifications_blueprint.post("/admin/send")
+@require_role("admin")
+def admin_send_message():
+    """Admin sends a message to one driver or broadcasts to all active drivers."""
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return _error("Send message data as a JSON object.", 400)
+
+    target = str(data.get("target", "all")).strip()
+    msg_type = str(data.get("message_type", "admin_message")).strip()
+    title = str(data.get("title", "")).strip()
+    message = str(data.get("message", "")).strip()
+
+    ALLOWED_TYPES = {
+        "admin_message", "announcement", "road_closure",
+        "hazard_alert", "traffic_warning", "emergency", "repair_update"
+    }
+    if msg_type not in ALLOWED_TYPES:
+        return _error("Invalid message_type.", 400)
+    if not title or len(title) > 120:
+        return _error("Title must be 1 to 120 characters.", 400)
+    if not message or len(message) > 1000:
+        return _error("Message must be 1 to 1000 characters.", 400)
+
+    connection = None
+    cursor = None
+    try:
+        connection = get_db_connection()
+        connection.start_transaction()
+        cursor = connection.cursor(dictionary=True)
+
+        if target == "all":
+            cursor.execute(
+                "SELECT id FROM users WHERE role = 'driver' AND status = 'active'"
+            )
+            recipients = [row["id"] for row in cursor.fetchall()]
+            if not recipients:
+                connection.rollback()
+                return _error("No active drivers found.", 404)
+        else:
+            try:
+                recipient_id = int(target)
+            except (ValueError, TypeError):
+                connection.rollback()
+                return _error("target must be 'all' or a valid driver user_id.", 400)
+            cursor.execute(
+                "SELECT id FROM users WHERE id = %s AND role = 'driver' AND status = 'active'",
+                (recipient_id,),
+            )
+            row = cursor.fetchone()
+            if row is None:
+                connection.rollback()
+                return _error("Driver not found or inactive.", 404)
+            recipients = [recipient_id]
+
+        sender_id = session["user_id"]
+        for uid in recipients:
+            cursor.execute(
+                """
+                INSERT INTO notifications
+                    (recipient_user_id, notification_type, title, message,
+                     related_entity_type, related_entity_id)
+                VALUES (%s, %s, %s, %s, 'admin_message', %s)
+                """,
+                (uid, msg_type, title, message, str(sender_id)),
+            )
+        connection.commit()
+    except mysql.connector.Error:
+        if connection is not None:
+            connection.rollback()
+        current_app.logger.exception("Could not send admin message.")
+        return _error("Message could not be sent. Try again later.", 503)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None:
+            connection.close()
+
+    return jsonify({
+        "message": f"Message sent to {len(recipients)} driver(s).",
+        "recipients": len(recipients),
+        "message_type": msg_type,
+    }), 201
+
+
+@notifications_blueprint.get("/admin/drivers")
+@require_role("admin")
+def list_drivers_for_messaging():
+    """Return active drivers for the admin message target dropdown."""
+    connection = None
+    cursor = None
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT id, full_name, email FROM users WHERE role = 'driver' AND status = 'active' ORDER BY full_name"
+        )
+        drivers = cursor.fetchall()
+    except mysql.connector.Error:
+        current_app.logger.exception("Could not load driver list for messaging.")
+        return _error("Could not load drivers.", 503)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None:
+            connection.close()
+    return jsonify({"drivers": drivers}), 200
+
+
+@notifications_blueprint.get("/admin/sent")
+@require_role("admin")
+def admin_sent_messages():
+    """Return notifications sent by this admin (stored with related_entity_type='admin_message')."""
+    connection = None
+    cursor = None
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        sender_id = session["user_id"]
+        cursor.execute(
+            """
+            SELECT notification_type, title, message, created_at,
+                   COUNT(*) AS recipient_count
+            FROM notifications
+            WHERE related_entity_type = 'admin_message'
+              AND related_entity_id = %s
+            GROUP BY notification_type, title, message, created_at
+            ORDER BY created_at DESC
+            LIMIT 50
+            """,
+            (str(sender_id),),
+        )
+        rows = cursor.fetchall()
+        for row in rows:
+            if row.get("created_at"):
+                row["created_at"] = row["created_at"].isoformat(sep=" ", timespec="seconds")
+    except mysql.connector.Error:
+        current_app.logger.exception("Could not load sent admin messages.")
+        return _error("Sent messages unavailable.", 503)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None:
+            connection.close()
+    return jsonify({"notifications": rows}), 200

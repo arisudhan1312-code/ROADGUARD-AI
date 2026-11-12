@@ -139,4 +139,4 @@ notificationList?.addEventListener("click", async (event) => {
 window.loadRoadguardNotifications = loadRoadguardNotifications;
 window.sendRoadguardHazardNotification = sendRoadguardHazardNotification;
 loadRoadguardNotifications();
-window.setInterval(loadRoadguardNotifications, 60_000);
+window.setInterval(loadRoadguardNotifications, 15_000);
