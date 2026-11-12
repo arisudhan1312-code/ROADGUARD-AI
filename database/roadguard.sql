@@ -275,13 +275,9 @@ CREATE TABLE IF NOT EXISTS rewards (
   CONSTRAINT fk_rewards_participant
     FOREIGN KEY (participant_id) REFERENCES volunteer_participants (participant_id)
     ON UPDATE CASCADE
-    ON DELETE RESTRICT,
-  CONSTRAINT chk_rewards_source
-    CHECK (
-      (reward_type = 'Repair' AND task_id IS NOT NULL AND participant_id IS NULL)
-      OR
-      (reward_type = 'Volunteer' AND participant_id IS NOT NULL AND task_id IS NULL)
-    )
+    ON DELETE RESTRICT
+  -- chk_rewards_source removed: MySQL 8.0 does not allow a column used in a FK
+  -- referential action to also appear in a CHECK constraint (Error 3823).
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS notifications (
