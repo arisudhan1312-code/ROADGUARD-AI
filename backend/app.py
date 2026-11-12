@@ -5,7 +5,7 @@ from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import mysql.connector
 
@@ -161,6 +161,17 @@ def create_app():
                 cursor.close()
             if connection is not None:
                 connection.close()
+
+    # Serve frontend HTML files in production
+    frontend_dir = str(Path(__file__).parent.parent / "frontend")
+
+    @app.route("/")
+    def serve_index():
+        return send_from_directory(frontend_dir, "login.html")
+
+    @app.route("/<path:filename>")
+    def serve_frontend(filename):
+        return send_from_directory(frontend_dir, filename)
 
     return app
 
