@@ -57,6 +57,7 @@ def create_app():
             "password": os.getenv("MYSQL_PASSWORD", ""),
             "database": os.getenv("MYSQL_DATABASE", "roadguard_ai"),
             "charset": "utf8mb4",
+            **( {"ssl_disabled": False} if os.getenv("MYSQL_SSL", "false").lower() == "true" else {} ),
         },
         MYSQL_POOL_SIZE=int(os.getenv("MYSQL_POOL_SIZE", "5")),
         MAX_CONTENT_LENGTH=11 * 1024 * 1024,
