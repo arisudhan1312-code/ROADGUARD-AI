@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071827">
+  <meta name="description" content="Submit and track your ROADGUARD AI road safety reports.">
+  <title>Citizen Dashboard | ROADGUARD AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page">
+  <!-- Reusable icons keep the dashboard self-contained and framework-free. -->
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-road" viewBox="0 0 24 24"><path d="M8 3 5 21m11-18 3 18M12 5v3m0 4v3m0 4v2"/></symbol>
+    <symbol id="icon-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></symbol>
+    <symbol id="icon-add" viewBox="0 0 24 24"><path d="M12 5v14m-7-7h14"/></symbol>
+    <symbol id="icon-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></symbol>
+    <symbol id="icon-status" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="icon-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/></symbol>
+    <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3"/><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/></symbol>
+    <symbol id="icon-report" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="M12 8v4m0 4h.01"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="icon-tools" viewBox="0 0 24 24"><path d="m14 7 3-3 4 4-3 3m-4-4L8 13l3 3 6-6m-9 3-4 1-1 6 6-1 1-4m3-1 6 6"/></symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="icon-gps" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></symbol>
+    <symbol id="icon-upload" viewBox="0 0 24 24"><path d="M12 16V4m-5 5 5-5 5 5"/><path d="M4 16v4h16v-4"/></symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  </svg>
+
+  <button class="sidebar-overlay" type="button" aria-label="Close navigation menu" tabindex="-1"></button>
+  <aside class="dashboard-sidebar" id="dashboard-sidebar">
+    <a class="brand dashboard-brand" href="index.html" aria-label="ROADGUARD AI home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none"><path d="M12 4h8l6 24h-6l-1.3-6h-5.4L12 28H6l6-24Z" fill="currentColor"/><path d="m16 8-.8 4h1.6L16 8Zm-1.5 9h3l-.5-2.5h-2l-.5 2.5Z" fill="#071827"/></svg>
+      </span>
+      <span class="brand-name">ROADGUARD <span>AI</span></span>
+    </a>
+
+    <div class="sidebar-user">
+      <span class="user-avatar">C</span>
+      <span><strong>Citizen Portal</strong><small>Community member</small></span>
+    </div>
+
+    <p class="sidebar-label">WORKSPACE</p>
+    <nav class="dashboard-nav" aria-label="Citizen dashboard">
+      <a class="dashboard-nav-link is-active" href="#dashboard" aria-current="page"><svg><use href="#icon-dashboard"></use></svg><span>Dashboard</span></a>
+      <a class="dashboard-nav-link" href="#report-problem"><svg><use href="#icon-add"></use></svg><span>Report Road Problem</span></a>
+      <a class="dashboard-nav-link" href="#ai-detection"><svg><use href="#icon-upload"></use></svg><span>AI Image Analysis</span></a>
+      <a class="dashboard-nav-link" href="#my-reports"><svg><use href="#icon-list"></use></svg><span>My Reports</span></a>
+      <a class="dashboard-nav-link" href="#report-status"><svg><use href="#icon-status"></use></svg><span>Report Status</span></a>
+      <a class="dashboard-nav-link" href="#notifications"><svg><use href="#icon-bell"></use></svg><span>Notifications</span><span class="nav-count" data-notification-count hidden>0</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-demo"><span class="demo-indicator"></span><span><strong>API-backed workspace</strong><small>Reports requested from MySQL</small></span></div>
+      <a class="dashboard-nav-link logout-link" href="index.html" data-logout><svg><use href="#icon-logout"></use></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main class="dashboard-main" id="dashboard">
+    <header class="dashboard-topbar">
+      <button class="sidebar-toggle" type="button" aria-label="Open dashboard menu" aria-expanded="false" aria-controls="dashboard-sidebar"><svg><use href="#icon-menu"></use></svg></button>
+      <div class="topbar-context"><span class="breadcrumb-muted">Workspace</span><span aria-hidden="true">/</span><strong>Citizen Dashboard</strong></div>
+      <div class="topbar-right"><span class="demo-pill"><span></span> API DATA</span><span class="topbar-avatar" aria-label="Citizen profile">C</span></div>
+    </header>
+
+    <div class="dashboard-content">
+      <section class="dashboard-welcome" aria-labelledby="welcome-title">
+        <div>
+          <p class="dashboard-kicker">THURSDAY, NOVEMBER 12, 2026</p>
+          <h1 id="welcome-title">Your road safety <span>at a glance.</span></h1>
+          <p>Report an issue in your community and follow its progress here.</p>
+        </div>
+        <a class="button button-green button-large" href="#report-problem"><svg><use href="#icon-add"></use></svg> Report a problem</a>
+      </section>
+
+      <div class="demo-notice" role="note">
+        <span class="notice-symbol">i</span>
+        <p><strong>Report workflow.</strong> Reports are saved for authorized administrator review. AI image uploads can be stored and reviewed, but no road-damage model weights are installed, so automated detections are not active.</p>
+      </div>
+
+      <section class="dashboard-section" aria-labelledby="overview-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">YOUR CONTRIBUTION</p><h2 id="overview-title">Reports overview</h2></div>
+          <span class="updated-label"><span class="demo-indicator"></span> Database-backed records</span>
+        </div>
+        <div class="summary-grid">
+          <article class="summary-card">
+            <div class="summary-card-top"><span class="summary-icon summary-icon-green"><svg><use href="#icon-report"></use></svg></span><span class="summary-trend">ALL TIME</span></div>
+            <strong class="summary-value" id="total-reports">—</strong><span class="summary-label">Total reports</span>
+            <div class="summary-foot">Community issues shared</div>
+          </article>
+          <article class="summary-card">
+            <div class="summary-card-top"><span class="summary-icon summary-icon-amber"><svg><use href="#icon-clock"></use></svg></span><span class="summary-trend">IN REVIEW</span></div>
+            <strong class="summary-value" id="pending-reports">—</strong><span class="summary-label">Pending reports</span>
+            <div class="summary-foot">Waiting for review</div>
+          </article>
+          <article class="summary-card">
+            <div class="summary-card-top"><span class="summary-icon summary-icon-blue"><svg><use href="#icon-check"></use></svg></span><span class="summary-trend">ACKNOWLEDGED</span></div>
+            <strong class="summary-value" id="approved-reports">—</strong><span class="summary-label">Approved reports</span>
+            <div class="summary-foot">Accepted for follow-up</div>
+          </article>
+          <article class="summary-card">
+            <div class="summary-card-top"><span class="summary-icon summary-icon-purple"><svg><use href="#icon-tools"></use></svg></span><span class="summary-trend">RESOLVED</span></div>
+            <strong class="summary-value" id="completed-repairs">—</strong><span class="summary-label">Completed repairs</span>
+            <div class="summary-foot">Updated from report status</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="dashboard-section report-section" id="report-problem" aria-labelledby="report-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">HELP IMPROVE YOUR STREETS</p><h2 id="report-title">Report a road problem</h2><p class="section-subtitle">Reports are associated with your signed-in account and sent to the Flask API.</p></div>
+          <span class="section-icon"><svg><use href="#icon-pin"></use></svg></span>
+        </div>
+        <form class="report-form" id="road-report-form" novalidate>
+          <div class="report-form-grid">
+            <div class="dashboard-field">
+              <label for="problem-category">Road problem category <span>*</span></label>
+              <select id="problem-category" name="category" required>
+                <option value="">Select a problem</option>
+                <option>Pothole</option>
+                <option>Damaged Road</option>
+                <option>Broken Streetlight</option>
+                <option>Waterlogging</option>
+                <option>Road Obstruction</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="dashboard-field">
+              <label for="problem-location">Location <span>*</span></label>
+              <div class="location-control">
+                <input id="problem-location" name="location" type="text" placeholder="Street, area or nearby landmark" required>
+                <button class="gps-button" id="gps-button" type="button"><svg><use href="#icon-gps"></use></svg><span>Use GPS</span></button>
+              </div>
+              <p class="gps-coordinate-text" id="gps-coordinates" aria-live="polite">GPS coordinates have not been added.</p>
+            </div>
+            <div class="dashboard-field field-full">
+              <label for="problem-description">Problem description <span>*</span></label>
+              <textarea id="problem-description" name="description" rows="4" placeholder="Describe the issue and any details that may help locate it." required></textarea>
+              <span class="field-hint">Please provide at least 10 characters.</span>
+            </div>
+            <div class="dashboard-field field-full">
+              <label for="road-image">Upload road image <span class="optional-label">Optional</span></label>
+              <label class="upload-area" for="road-image">
+                <span class="upload-icon"><svg><use href="#icon-upload"></use></svg></span>
+                <span><strong>Choose an image to upload</strong><small>JPG, PNG or other image format · up to 5 MB</small></span>
+                <input id="road-image" name="image" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+              </label>
+              <div class="image-preview" id="image-preview" hidden>
+                <img id="preview-image" alt="Selected road problem preview">
+                <span id="preview-name"></span>
+                <button id="remove-image" type="button" aria-label="Remove selected image">Remove</button>
+              </div>
+            </div>
+          </div>
+          <div class="report-form-actions">
+            <p class="required-note"><span>*</span> Required fields</p>
+            <button class="button button-green button-large" type="submit">Submit report <span aria-hidden="true">↗</span></button>
+          </div>
+          <p class="report-feedback" id="report-feedback" role="status" aria-live="polite" tabindex="-1" hidden></p>
+        </form>
+      </section>
+
+      <section class="dashboard-section report-section ai-detection-section" id="ai-detection" aria-labelledby="ai-detection-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">IMAGE-BASED ROAD REVIEW</p><h2 id="ai-detection-title">AI road image analysis</h2><p class="section-subtitle">Analyze a road photo with the configured road-damage model. Results stay unverified until an administrator reviews them.</p></div>
+          <span class="section-icon"><svg><use href="#icon-upload"></use></svg></span>
+        </div>
+        <form class="ai-upload-form" data-ai-detection-form data-ai-role="citizen">
+          <div class="dashboard-field">
+            <label for="citizen-ai-image">Road image <span>*</span></label>
+            <label class="upload-area" for="citizen-ai-image">
+              <span class="upload-icon"><svg><use href="#icon-upload"></use></svg></span>
+              <span><strong>Choose a road image</strong><small>JPG or PNG · up to 5 MB</small></span>
+              <input id="citizen-ai-image" data-ai-image type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+            </label>
+          </div>
+          <div class="dashboard-field">
+            <label for="citizen-ai-report">Link to one of your reports (optional)</label>
+            <select id="citizen-ai-report" data-ai-report-id>
+              <option value="">Do not link to an existing report</option>
+            </select>
+            <small class="field-help">The server checks that a selected report belongs to your account.</small>
+          </div>
+          <div class="ai-image-preview" data-ai-preview hidden></div>
+          <div class="report-form-actions">
+            <p class="required-note">Image analysis does not determine your GPS location or confirm a hazard.</p>
+            <button class="button button-green button-large" type="submit">Analyze Road Image</button>
+          </div>
+          <div class="ai-progress-wrap" data-ai-progress-wrap hidden>
+            <progress class="ai-progress" aria-label="Uploading and validating image"></progress>
+            <p data-ai-progress-text role="status" aria-live="polite"></p>
+          </div>
+          <p class="report-feedback" data-ai-feedback role="status" aria-live="polite" hidden></p>
+          <div data-ai-current-result></div>
+        </form>
+        <div class="ai-detection-history" data-ai-citizen-results aria-live="polite"></div>
+      </section>
+
+      <section class="dashboard-section" id="report-status" aria-labelledby="status-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">FOLLOW THE PROGRESS</p><h2 id="status-title">Report status</h2><p class="section-subtitle">Current status summary for your reports stored in MySQL.</p></div>
+        </div>
+        <div class="status-overview">
+          <div class="status-overview-item"><span class="status-dot status-pending"></span><span>Pending</span><strong id="status-pending-count">—</strong></div>
+          <div class="status-overview-item"><span class="status-dot status-approved"></span><span>Approved</span><strong id="status-approved-count">—</strong></div>
+          <div class="status-overview-item"><span class="status-dot status-completed"></span><span>Completed</span><strong id="status-completed-count">—</strong></div>
+          <div class="status-progress" aria-hidden="true"><span id="status-progress-pending"></span><span id="status-progress-approved"></span><span id="status-progress-completed"></span></div>
+          <p class="status-demo-note">New reports start as Pending Review. Only an administrator can approve or reject a report.</p>
+        </div>
+      </section>
+
+      <section class="dashboard-section" id="my-reports" aria-labelledby="reports-title">
+        <div class="dashboard-section-heading reports-heading">
+          <div><p class="dashboard-kicker">YOUR SUBMISSIONS</p><h2 id="reports-title">My reports</h2><p class="section-subtitle">Only reports associated with your signed-in account are shown here.</p></div>
+          <span class="table-count" id="table-report-count">Loading…</span>
+        </div>
+        <div class="reports-table-wrap">
+          <table class="reports-table">
+            <thead>
+              <tr><th scope="col">Report ID</th><th scope="col">Hazard type</th><th scope="col">Location</th><th scope="col">Date</th><th scope="col">Priority</th><th scope="col">Status</th><th scope="col">Details</th></tr>
+            </thead>
+            <tbody id="reports-table-body"></tbody>
+          </table>
+          <p class="empty-reports" id="empty-reports" hidden>No reports are available yet.</p>
+        </div>
+      </section>
+
+      <dialog class="report-details-dialog" id="report-details-dialog" aria-labelledby="report-details-title">
+        <div class="report-details-heading">
+          <div><p class="dashboard-kicker">REPORT DETAILS</p><h2 id="report-details-title">Road report</h2></div>
+          <button class="report-details-close" id="close-report-details" type="button" aria-label="Close report details">×</button>
+        </div>
+        <div class="report-details-content" id="report-details-content"></div>
+      </dialog>
+
+      <section class="dashboard-section notifications-section" id="notifications" aria-labelledby="notifications-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">STAY IN THE LOOP</p><h2 id="notifications-title">Notifications</h2></div>
+          <span class="notification-badge" data-notifications-status>Loading</span>
+        </div>
+        <div class="notification-list" data-notifications-list aria-live="polite"></div>
+        <p class="empty-reports" data-notifications-empty hidden>No notifications yet.</p>
+      </section>
+
+      <footer class="dashboard-footer"><span>© 2026 ROADGUARD AI</span><span>Safer Roads, Smarter Future</span></footer>
+    </div>
+  </main>
+  <script src="js/api-config.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/citizen.js"></script>
+  <script src="js/ai-detection.js"></script>
+</body>
+</html>

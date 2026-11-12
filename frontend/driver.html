@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071827">
+  <meta name="description" content="ROADGUARD AI driver dashboard with GPS tracking and verified nearby road hazard alerts.">
+  <title>Driver Dashboard | ROADGUARD AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page driver-page">
+  <!-- Small inline icons avoid an additional icon library. -->
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="driver-icon-road" viewBox="0 0 24 24"><path d="M8 3 5 21m11-18 3 18M12 5v3m0 4v3m0 4v2"/></symbol>
+    <symbol id="driver-icon-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></symbol>
+    <symbol id="driver-icon-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15m6-12v15"/></symbol>
+    <symbol id="driver-icon-alert" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="M12 8v4m0 4h.01"/></symbol>
+    <symbol id="driver-icon-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h2a3 3 0 0 0 3-3v-1a3 3 0 0 1 3-3h2m-12-2h2a3 3 0 0 1 3 3v1"/></symbol>
+    <symbol id="driver-icon-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.64-6.36L3 8"/><path d="M3 3v5h5m4-1v5l3 2"/></symbol>
+    <symbol id="driver-icon-logout" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3"/><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/></symbol>
+    <symbol id="driver-icon-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="driver-icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="driver-icon-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="driver-icon-gps" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></symbol>
+    <symbol id="driver-icon-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="driver-icon-warning" viewBox="0 0 24 24"><path d="m10.3 3.9-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3.1l-8-14a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 4h.01"/></symbol>
+    <symbol id="driver-icon-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2m10 8h-2M12 22v-2M2 12h2"/></symbol>
+    <symbol id="driver-icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+  </svg>
+
+  <button class="sidebar-overlay" type="button" aria-label="Close navigation menu" tabindex="-1"></button>
+  <aside class="dashboard-sidebar" id="driver-sidebar">
+    <a class="brand dashboard-brand" href="index.html" aria-label="ROADGUARD AI home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none"><path d="M12 4h8l6 24h-6l-1.3-6h-5.4L12 28H6l6-24Z" fill="currentColor"/><path d="m16 8-.8 4h1.6L16 8Zm-1.5 9h3l-.5-2.5h-2l-.5 2.5Z" fill="#071827"/></svg>
+      </span>
+      <span class="brand-name">ROADGUARD <span>AI</span></span>
+    </a>
+
+    <div class="sidebar-user">
+      <span class="user-avatar">D</span>
+      <span><strong>Driver Portal</strong><small>Live hazard services</small></span>
+    </div>
+
+    <p class="sidebar-label">DRIVER TOOLS</p>
+    <nav class="dashboard-nav" aria-label="Driver dashboard">
+      <a class="dashboard-nav-link is-active" href="#driver-dashboard" aria-current="page"><svg><use href="#driver-icon-dashboard"></use></svg><span>Dashboard</span></a>
+      <a class="dashboard-nav-link" href="#live-map"><svg><use href="#driver-icon-map"></use></svg><span>Live Road Map</span></a>
+      <a class="dashboard-nav-link" href="#nearby-hazards"><svg><use href="#driver-icon-alert"></use></svg><span>Nearby Hazards</span><span class="nav-count" id="nearby-count">0</span></a>
+      <a class="dashboard-nav-link" href="#gps-alerts"><svg><use href="#driver-icon-gps"></use></svg><span>GPS Alerts</span></a>
+      <a class="dashboard-nav-link" href="#alternate-routes"><svg><use href="#driver-icon-route"></use></svg><span>Alternate Routes</span></a>
+      <a class="dashboard-nav-link" href="#alert-history"><svg><use href="#driver-icon-history"></use></svg><span>Alert History</span></a>
+      <a class="dashboard-nav-link" href="#notifications"><svg><use href="#driver-icon-alert"></use></svg><span>Notifications</span><span class="nav-count" data-notification-count hidden>0</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-demo"><span class="demo-indicator"></span><span><strong>Authenticated service</strong><small>Hazards require admin approval</small></span></div>
+      <a class="dashboard-nav-link logout-link" href="index.html" data-logout><svg><use href="#driver-icon-logout"></use></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main class="dashboard-main" id="driver-dashboard">
+    <header class="dashboard-topbar">
+      <button class="sidebar-toggle" type="button" aria-label="Open dashboard menu" aria-expanded="false" aria-controls="driver-sidebar"><svg><use href="#driver-icon-menu"></use></svg></button>
+      <div class="topbar-context"><span class="breadcrumb-muted">Workspace</span><span aria-hidden="true">/</span><strong>Driver Dashboard</strong></div>
+      <div class="topbar-right"><span class="demo-pill"><span></span> API DATA</span><span class="topbar-avatar" aria-label="Driver profile">D</span></div>
+    </header>
+
+    <div class="dashboard-content driver-content">
+      <section class="dashboard-welcome driver-welcome" aria-labelledby="driver-welcome-title">
+        <div>
+          <p class="dashboard-kicker">DRIVE WITH AWARENESS</p>
+          <h1 id="driver-welcome-title">Stay aware. Arrive <span>safer.</span></h1>
+          <p>Nearby alerts use administrator-approved, verified hazard records from the ROADGUARD API.</p>
+        </div>
+        <a class="button button-green button-large" href="#live-map"><svg><use href="#driver-icon-map"></use></svg> Open live map</a>
+      </section>
+
+      <div class="driver-demo-notice" role="note">
+        <svg><use href="#driver-icon-warning"></use></svg>
+        <p><strong>Live service limitations.</strong> Hazard results come from the authenticated API and include only administrator-approved, unresolved records. GPS is used to request nearby results and is not stored by this page. Automated AI detection is not active.</p>
+      </div>
+
+      <section class="driver-overview" aria-label="Driver overview">
+        <article class="summary-card driver-summary-card">
+          <div class="summary-card-top"><span class="summary-icon summary-icon-green"><svg><use href="#driver-icon-pin"></use></svg></span><span class="summary-trend">GPS</span></div>
+          <span class="driver-summary-label">GPS status</span><strong class="driver-summary-value location-value" id="current-location-value">Tracking off</strong><span class="driver-summary-foot" id="location-summary-note">Start GPS to search nearby</span>
+        </article>
+        <article class="summary-card driver-summary-card">
+          <div class="summary-card-top"><span class="summary-icon summary-icon-amber"><svg><use href="#driver-icon-alert"></use></svg></span><span class="summary-trend">WITHIN 500 M</span></div>
+          <span class="driver-summary-label">Nearby potholes</span><strong class="driver-summary-value" id="nearby-pothole-value">—</strong><span class="driver-summary-foot">Verified and unresolved API records</span>
+        </article>
+        <article class="summary-card driver-summary-card">
+          <div class="summary-card-top"><span class="summary-icon summary-icon-blue"><svg><use href="#driver-icon-alert"></use></svg></span><span class="summary-trend">WITHIN 500 M</span></div>
+          <span class="driver-summary-label">Other nearby hazards</span><strong class="driver-summary-value" id="nearby-other-value">—</strong><span class="driver-summary-foot">Verified and unresolved API records</span>
+        </article>
+        <article class="summary-card driver-summary-card">
+          <div class="summary-card-top"><span class="summary-icon summary-icon-blue"><svg><use href="#driver-icon-gps"></use></svg></span><span class="summary-trend">WITHIN 500 M</span></div>
+          <span class="driver-summary-label">Active alerts</span><strong class="driver-summary-value" id="active-alert-value">—</strong><span class="driver-summary-foot" id="active-alert-note">GPS tracking is off</span>
+        </article>
+        <article class="summary-card driver-summary-card">
+          <div class="summary-card-top"><span class="summary-icon summary-icon-purple"><svg><use href="#driver-icon-route"></use></svg></span><span class="summary-trend">ROUTE</span></div>
+          <span class="driver-summary-label">Selected route status</span><strong class="driver-summary-value route-value" id="route-status-value">Not planned</strong><span class="driver-summary-foot">A route is not guaranteed hazard-free</span>
+        </article>
+      </section>
+
+      <section class="driver-section map-section" id="live-map" aria-labelledby="map-title">
+        <div class="driver-section-heading map-heading">
+          <div><p class="dashboard-kicker">OPENSTREETMAP · INTERACTIVE</p><h2 id="map-title">Live road map</h2><p class="section-subtitle">The map displays verified, unresolved hazards returned by the nearby API.</p></div>
+          <span class="map-demo-label"><span></span> VERIFIED API RESULTS</span>
+        </div>
+        <div class="map-shell">
+          <div id="driver-map" role="application" aria-label="Interactive OpenStreetMap showing your GPS location and verified nearby hazards"></div>
+          <div class="map-error" id="map-error" role="status" hidden></div>
+        </div>
+        <div class="map-legend" aria-label="Map marker legend">
+          <strong>HAZARD RECORD LEGEND</strong>
+          <span><i class="legend-dot hazard-pothole"></i>Pothole</span>
+          <span><i class="legend-dot hazard-damaged"></i>Damaged road</span>
+          <span><i class="legend-dot hazard-water"></i>Waterlogging</span>
+          <span><i class="legend-dot hazard-obstruction"></i>Road obstruction / other</span>
+          <span><i class="legend-dot driver-dot"></i>Your GPS location</span>
+          <span><i class="legend-dot route-start-dot"></i>Selected route start</span>
+          <span><i class="legend-dot route-destination-dot"></i>Selected destination</span>
+          <span><i class="legend-radius"></i>500 m search radius</span>
+        </div>
+        <div class="map-source-note">Map © OpenStreetMap contributors · Tiles are loaded from the public OSM tile service.</div>
+      </section>
+
+      <section class="driver-section gps-section" id="gps-alerts" aria-labelledby="gps-title">
+        <div class="driver-section-heading">
+          <div><p class="dashboard-kicker">DEVICE LOCATION</p><h2 id="gps-title">GPS tracking &amp; alerts</h2><p class="section-subtitle">The browser sends your current coordinates to the authenticated nearby-hazards API; this page does not store them.</p></div>
+          <span class="gps-state" id="gps-state"><i></i><span>Tracking off</span></span>
+        </div>
+        <div class="gps-control-row">
+          <div class="gps-coord-card"><svg><use href="#driver-icon-target"></use></svg><span><small>LATITUDE</small><strong id="driver-latitude">—</strong></span></div>
+          <div class="gps-coord-card"><svg><use href="#driver-icon-target"></use></svg><span><small>LONGITUDE</small><strong id="driver-longitude">—</strong></span></div>
+          <div class="gps-buttons">
+            <button class="button button-green gps-action-button" id="start-tracking" type="button"><svg><use href="#driver-icon-gps"></use></svg>Start GPS tracking</button>
+            <button class="button button-outline gps-action-button" id="stop-tracking" type="button" disabled>Stop tracking</button>
+          </div>
+        </div>
+        <p class="gps-message" id="gps-message" role="status" aria-live="polite">Sign in as a driver, then start GPS tracking to load nearby verified hazards.</p>
+        <div class="warning-panel" id="proximity-warning" role="alert" aria-live="assertive" hidden>
+          <div class="warning-panel-heading"><svg><use href="#driver-icon-warning"></use></svg><strong>VERIFIED HAZARD ALERTS</strong></div>
+          <div id="warning-list"></div>
+          <p>Distances are approximate. Stay alert, verify road conditions, and follow local traffic rules.</p>
+        </div>
+      </section>
+
+      <section class="driver-section" id="nearby-hazards" aria-labelledby="hazards-title">
+        <div class="driver-section-heading">
+          <div><p class="dashboard-kicker">VERIFIED · UNRESOLVED</p><h2 id="hazards-title">Nearby hazards</h2><p class="section-subtitle">Only hazards approved by an administrator and not marked resolved appear here.</p></div>
+          <span class="sample-count" id="hazard-record-count">Start GPS to search</span>
+        </div>
+        <div class="hazard-list" id="hazard-list"></div>
+      </section>
+
+      <section class="driver-section route-section" id="alternate-routes" aria-labelledby="route-title">
+        <div class="driver-section-heading">
+          <div><p class="dashboard-kicker">OPENSTREETMAP DATA · OSRM DEMO</p><h2 id="route-title">Plan a route</h2><p class="section-subtitle">Compare available routes; a suggested route is not guaranteed safer or hazard-free.</p></div>
+          <span class="section-icon"><svg><use href="#driver-icon-route"></use></svg></span>
+        </div>
+        <form class="route-form" id="route-form" novalidate>
+          <div class="route-inputs">
+            <div class="dashboard-field">
+              <label for="route-start">Starting location</label>
+              <div class="route-input-wrap"><span class="route-input-icon start-icon"></span><input id="route-start" name="start" type="text" placeholder="Address or latitude, longitude" required><button class="use-current-location" id="use-current-location" type="button">Use GPS</button></div>
+            </div>
+            <span class="route-direction" aria-hidden="true">→</span>
+            <div class="dashboard-field">
+              <label for="route-destination">Destination</label>
+              <div class="route-input-wrap"><span class="route-input-icon destination-icon"></span><input id="route-destination" name="destination" type="text" placeholder="Address or latitude, longitude" required><button class="use-current-location" id="choose-map-destination" type="button">Choose on map</button></div>
+            </div>
+            <button class="button button-green route-submit" id="find-route" type="submit"><svg><use href="#driver-icon-search"></use></svg>Find route</button>
+          </div>
+          <p class="route-helper">You can enter a place name or coordinates in latitude, longitude format (for example 12.9716, 77.5946).</p>
+          <p class="route-feedback" id="route-feedback" role="status" aria-live="polite" hidden></p>
+        </form>
+        <div class="route-results" id="route-results" hidden>
+          <div class="route-results-heading"><strong>Available route options</strong><span id="route-result-note"></span></div>
+          <div class="route-options" id="route-options"></div>
+          <p class="route-limits">The suggestion minimizes a transparent risk sum for verified active hazards within 100 m (Critical 8, High 5, Medium 3, Low 1; unrated 2), then uses OSRM-reported duration and distance as tie-breakers. If hazard data is unavailable, the suggestion uses OSRM estimates only. Known reports can be incomplete, so no route is guaranteed hazard-free. The public OSRM demo service may be rate-limited.</p>
+        </div>
+        <div class="route-api-note">Place-name lookup uses the public OpenStreetMap Nominatim service; route requests include the entered start and destination. Network access is required. Avoid entering sensitive locations.</div>
+      </section>
+
+      <section class="driver-section" id="alert-history" aria-labelledby="history-title">
+        <div class="driver-section-heading">
+          <div><p class="dashboard-kicker">RECENT ACTIVITY</p><h2 id="history-title">Alert history</h2><p class="section-subtitle">Newly detected verified hazards are recorded for this page session.</p></div>
+          <span class="sample-count" id="history-count">0 records</span>
+        </div>
+        <div class="history-table-wrap">
+          <table class="reports-table history-table">
+            <thead><tr><th scope="col">Hazard type</th><th scope="col">Location</th><th scope="col">Distance</th><th scope="col">Alert time</th><th scope="col">Status</th></tr></thead>
+            <tbody id="history-table-body"></tbody>
+          </table>
+          <p class="empty-history" id="empty-history" hidden>No verified hazard alerts have been received in this session.</p>
+        </div>
+      </section>
+
+      <section class="dashboard-section notifications-section" id="notifications" aria-labelledby="notifications-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">STAY INFORMED</p><h2 id="notifications-title">Notifications</h2></div><span class="notification-badge" data-notifications-status>Loading</span></div>
+        <div class="notification-list" data-notifications-list aria-live="polite"></div>
+        <p class="empty-reports" data-notifications-empty hidden>No notifications yet.</p>
+      </section>
+
+      <footer class="dashboard-footer"><span>© 2026 ROADGUARD AI</span><span>Hazard alerts require administrator approval and remain subject to change</span></footer>
+    </div>
+  </main>
+
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="js/api-config.js"></script>
+  <script defer src="js/notifications.js"></script>
+  <script defer src="js/session.js"></script>
+  <script defer src="js/driver.js"></script>
+</body>
+</html>

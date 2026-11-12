@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.venv/
+venv/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+backend/uploads/
+backend/detection_uploads/
+backend/models/*.pt
+backend/models/*.pth
+backend/models/*.onnx
+backend/models/*.weights
+
+# Editor / operating system
+.vscode/
+.DS_Store
+Thumbs.db

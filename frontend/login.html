@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071827">
+  <meta name="description" content="Log in to ROADGUARD AI and help make every journey safer.">
+  <title>Login | ROADGUARD AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="account-page">
+  <header class="account-header container">
+    <a class="brand" href="index.html" aria-label="ROADGUARD AI home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none"><path d="M12 4h8l6 24h-6l-1.3-6h-5.4L12 28H6l6-24Z" fill="currentColor"/><path d="m16 8-.8 4h1.6L16 8Zm-1.5 9h3l-.5-2.5h-2l-.5 2.5Z" fill="#071827"/></svg>
+      </span>
+      <span class="brand-name">ROADGUARD <span>AI</span></span>
+    </a>
+    <a class="back-home" href="index.html"><span aria-hidden="true">←</span> Back to Home</a>
+  </header>
+
+  <main class="account-layout container">
+    <aside class="account-aside">
+      <p class="eyebrow"><span class="pulse-dot"></span> SAFER JOURNEYS START HERE</p>
+      <h1>Good to see you <span>again.</span></h1>
+      <p class="aside-copy">Sign in to stay connected with your community and the roads you travel.</p>
+      <div class="account-art" aria-hidden="true">
+        <svg viewBox="0 0 520 275" fill="none">
+          <path d="M-25 210c100-28 119-104 217-103 91 1 124 90 216 55 42-16 70-52 120-66" stroke="#1b3442" stroke-width="42" stroke-linecap="round"/>
+          <path d="M-25 210c100-28 119-104 217-103 91 1 124 90 216 55 42-16 70-52 120-66" stroke="#35df91" stroke-width="2" stroke-dasharray="6 10" stroke-linecap="round"/>
+          <path d="M95-22c35 53 24 93 66 137 28 30 78 34 106 75 19 28 16 53 31 85" stroke="#142d3b" stroke-width="24" stroke-linecap="round"/>
+          <circle cx="191" cy="107" r="11" fill="#0b2030" stroke="#35df91" stroke-width="2"/>
+          <circle cx="408" cy="162" r="11" fill="#0b2030" stroke="#35df91" stroke-width="2"/>
+          <circle cx="260" cy="162" r="23" fill="#35df91" fill-opacity=".12"/>
+          <circle cx="260" cy="162" r="8" fill="#35df91"/>
+        </svg>
+        <div class="art-caption"><span class="art-check">✓</span><span><strong>One connected network</strong><small>Making roads safer, together</small></span></div>
+      </div>
+      <div class="aside-footnote"><span>01</span> AWARENESS <i></i><span>02</span> ACTION <i></i><span>03</span> SAFER ROADS</div>
+    </aside>
+
+    <section class="account-panel" aria-labelledby="form-title">
+      <div class="panel-heading">
+        <p class="section-kicker">WELCOME BACK</p>
+        <h2 id="form-title">Login to your account</h2>
+        <p>Enter your details below to continue.</p>
+      </div>
+
+      <form class="account-form" data-auth-form="login" novalidate>
+        <div class="form-field">
+          <label for="login-email">Email address</label>
+          <input id="login-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-field">
+          <div class="field-heading">
+            <label for="login-password">Password</label>
+            <a class="form-link" href="#login-feedback" data-forgot-password>Forgot password?</a>
+          </div>
+          <div class="password-control">
+            <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+            <button class="password-toggle" type="button" data-toggle-password="login-password" aria-pressed="false">Show</button>
+          </div>
+        </div>
+        <button class="button button-green button-large submit-button" type="submit">Login <span aria-hidden="true">↗</span></button>
+        <p class="form-feedback" id="login-feedback" role="status" aria-live="polite" tabindex="-1" hidden></p>
+      </form>
+
+      <p class="account-switch">Don't have an account? <a href="register.html">Register</a></p>
+      <p class="account-demo-note">Login uses the Flask API when the backend is running. Your password is verified by the server and is not saved in browser storage.</p>
+    </section>
+  </main>
+
+  <footer class="account-footer container"><span>© 2026 ROADGUARD AI</span><span>Safer Roads, Smarter Future</span></footer>
+  <script src="js/api-config.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071827">
+  <meta name="description" content="ROADGUARD AI admin dashboard for database-backed reports, hazards, worker allocation, repair verification and analytics.">
+  <title>Admin Dashboard | ROADGUARD AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page admin-page">
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="admin-icon-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></symbol>
+    <symbol id="admin-icon-report" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="M12 8v4m0 4h.01"/></symbol>
+    <symbol id="admin-icon-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15m6-12v15"/></symbol>
+    <symbol id="admin-icon-workers" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="admin-icon-tools" viewBox="0 0 24 24"><path d="m14 7 3-3 4 4-3 3m-4-4L8 13l3 3 6-6m-9 3-4 1-1 6 6-1 1-4m3-1 6 6"/></symbol>
+    <symbol id="admin-icon-volunteer" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></symbol>
+    <symbol id="admin-icon-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="admin-icon-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="m8.2 13-1.2 9 5-3 5 3-1.2-9"/></symbol>
+    <symbol id="admin-icon-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-5 5"/></symbol>
+    <symbol id="admin-icon-logout" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3"/><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/></symbol>
+    <symbol id="admin-icon-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="admin-icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="admin-icon-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="admin-icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="admin-icon-warning" viewBox="0 0 24 24"><path d="m10.3 3.9-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3.1l-8-14a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 4h.01"/></symbol>
+    <symbol id="admin-icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></symbol>
+    <symbol id="admin-icon-photo" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></symbol>
+    <symbol id="admin-icon-filter" viewBox="0 0 24 24"><path d="M4 7h16M7 12h10m-7 5h4"/></symbol>
+  </svg>
+
+  <button class="sidebar-overlay" type="button" aria-label="Close navigation menu" tabindex="-1"></button>
+  <aside class="dashboard-sidebar" id="admin-sidebar">
+    <a class="brand dashboard-brand" href="index.html" aria-label="ROADGUARD AI home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M12 4h8l6 24h-6l-1.3-6h-5.4L12 28H6l6-24Z" fill="currentColor"/><path d="m16 8-.8 4h1.6L16 8Zm-1.5 9h3l-.5-2.5h-2l-.5 2.5Z" fill="#071827"/></svg></span>
+      <span class="brand-name">ROADGUARD <span>AI</span></span>
+    </a>
+    <div class="sidebar-user"><span class="user-avatar">A</span><span><strong>Admin Portal</strong><small>Live operations workspace</small></span></div>
+    <p class="sidebar-label">ADMINISTRATION</p>
+    <nav class="dashboard-nav" aria-label="Admin dashboard">
+      <a class="dashboard-nav-link is-active" href="#admin-overview" aria-current="page"><svg><use href="#admin-icon-dashboard"></use></svg><span>Overview</span></a>
+      <a class="dashboard-nav-link" href="#citizen-reports"><svg><use href="#admin-icon-report"></use></svg><span>Citizen Reports</span><span class="nav-count" id="pending-report-nav">—</span></a>
+      <a class="dashboard-nav-link" href="#ai-detection"><svg><use href="#admin-icon-photo"></use></svg><span>AI Image Review</span><span class="nav-count" data-ai-admin-count>—</span></a>
+      <a class="dashboard-nav-link" href="#hazard-management"><svg><use href="#admin-icon-map"></use></svg><span>Hazard Management</span></a>
+      <a class="dashboard-nav-link" href="#worker-management"><svg><use href="#admin-icon-workers"></use></svg><span>Worker Management</span></a>
+      <a class="dashboard-nav-link" href="#task-allocation"><svg><use href="#admin-icon-tools"></use></svg><span>Task Allocation</span></a>
+      <a class="dashboard-nav-link" href="#volunteer-management"><svg><use href="#admin-icon-volunteer"></use></svg><span>Volunteer Management</span></a>
+      <a class="dashboard-nav-link" href="#repair-verification"><svg><use href="#admin-icon-check"></use></svg><span>Repair Verification</span><span class="nav-count" id="verification-nav-count">—</span></a>
+      <a class="dashboard-nav-link" href="#rewards-management"><svg><use href="#admin-icon-award"></use></svg><span>Rewards Management</span></a>
+      <a class="dashboard-nav-link" href="#analytics"><svg><use href="#admin-icon-chart"></use></svg><span>Analytics</span></a>
+      <a class="dashboard-nav-link" href="#notifications"><svg><use href="#admin-icon-warning"></use></svg><span>Notifications</span><span class="nav-count" data-notification-count hidden>0</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-demo"><span class="demo-indicator"></span><span><strong>API-backed workflows</strong><small>Data loads from Flask when available</small></span></div>
+      <a class="dashboard-nav-link logout-link" href="index.html" data-logout><svg><use href="#admin-icon-logout"></use></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main class="dashboard-main" id="admin-overview">
+    <header class="dashboard-topbar">
+      <button class="sidebar-toggle" type="button" aria-label="Open dashboard menu" aria-expanded="false" aria-controls="admin-sidebar"><svg><use href="#admin-icon-menu"></use></svg></button>
+      <div class="topbar-context"><span class="breadcrumb-muted">Operations</span><span aria-hidden="true">/</span><strong>Admin Dashboard</strong></div>
+      <div class="topbar-right"><span class="demo-pill"><span></span> API DATA</span><span class="topbar-avatar" aria-label="Admin profile">A</span></div>
+    </header>
+
+    <div class="dashboard-content admin-content">
+      <section class="dashboard-welcome admin-welcome" aria-labelledby="admin-welcome-title">
+        <div><p class="dashboard-kicker">ROAD SAFETY OPERATIONS</p><h1 id="admin-welcome-title">One view. <span>Safer streets.</span></h1><p>Review community reports, coordinate crews and verify repair evidence.</p></div>
+        <a class="button button-green button-large" href="#citizen-reports"><svg><use href="#admin-icon-report"></use></svg> Review reports</a>
+      </section>
+      <div class="admin-demo-notice" role="note"><svg><use href="#admin-icon-warning"></use></svg><p><strong>Database-backed workspace.</strong> Reports, hazards, workers, repair evidence, activities and reward totals are requested through authenticated APIs. Allocation is a transparent rule-based recommendation, not a trained AI model. Apply the database migrations before using these workflows.</p></div>
+      <p class="admin-feedback" id="admin-feedback" role="status" aria-live="polite" tabindex="-1" hidden></p>
+
+      <section class="dashboard-section" aria-labelledby="admin-stats-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">OPERATIONS SNAPSHOT</p><h2 id="admin-stats-title">Dashboard overview</h2></div><span class="updated-label"><span class="demo-indicator"></span><span id="admin-storage-status">Loading from Flask API…</span></span></div>
+        <div class="summary-grid admin-stats-grid">
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-green"><svg><use href="#admin-icon-report"></use></svg></span><span class="summary-trend">ALL REPORTS</span></div><strong class="summary-value" id="stat-total-reports">—</strong><span class="summary-label">Total road reports</span><div class="summary-foot">Records from the database</div></article>
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-amber"><svg><use href="#admin-icon-clock"></use></svg></span><span class="summary-trend">REVIEW</span></div><strong class="summary-value" id="stat-pending-reports">—</strong><span class="summary-label">Pending reports</span><div class="summary-foot">Awaiting admin action</div></article>
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-blue"><svg><use href="#admin-icon-check"></use></svg></span><span class="summary-trend">APPROVED</span></div><strong class="summary-value" id="stat-approved-reports">—</strong><span class="summary-label">Approved reports</span><div class="summary-foot">Eligible for hazard tracking</div></article>
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-amber"><svg><use href="#admin-icon-warning"></use></svg></span><span class="summary-trend">PRIORITY</span></div><strong class="summary-value" id="stat-high-hazards">—</strong><span class="summary-label">Critical / High priority</span><div class="summary-foot">Active approved hazards</div></article>
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-purple"><svg><use href="#admin-icon-workers"></use></svg></span><span class="summary-trend">AVAILABLE + ASSIGNED</span></div><strong class="summary-value" id="stat-active-workers">—</strong><span class="summary-label">Active workers</span><div class="summary-foot">Workers marked available or on task</div></article>
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-green"><svg><use href="#admin-icon-tools"></use></svg></span><span class="summary-trend">REPAIR STATUS</span></div><strong class="summary-value" id="stat-completed-repairs">—</strong><span class="summary-label">Completed repairs</span><div class="summary-foot">Verified repair records</div></article>
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-amber"><svg><use href="#admin-icon-clock"></use></svg></span><span class="summary-trend">REVIEW REQUIRED</span></div><strong class="summary-value" id="stat-awaiting-verification">—</strong><span class="summary-label">Repairs awaiting verification</span><div class="summary-foot">Worker evidence needs review</div></article>
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-blue"><svg><use href="#admin-icon-volunteer"></use></svg></span><span class="summary-trend">COMMUNITY</span></div><strong class="summary-value" id="stat-active-activities">—</strong><span class="summary-label">Active volunteer activities</span><div class="summary-foot">Optional worker participation</div></article>
+        </div>
+      </section>
+
+      <section class="dashboard-section admin-panel" id="citizen-reports" aria-labelledby="citizen-reports-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">COMMUNITY INTAKE</p><h2 id="citizen-reports-title">Citizen reports</h2><p class="section-subtitle">Review citizen submissions saved in MySQL. New reports remain pending until an administrator acts. Priority is a transparent rule-based recommendation; traffic importance is entered by an administrator, not fetched from live traffic data.</p></div>        <span class="table-count" id="report-table-count">Loading…</span></div>
+        <div class="admin-table-tools">
+          <label class="admin-search"><svg><use href="#admin-icon-search"></use></svg><input id="report-search" type="search" placeholder="Search reports, names or locations" aria-label="Search citizen reports"></label>
+          <label class="admin-filter-control"><span>Status</span><select id="report-status-filter"><option value="all">All statuses</option><option>Pending Review</option><option>Approved</option><option>Rejected</option><option>Completed</option></select></label>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="reports-table admin-table">
+            <thead><tr><th scope="col">Report ID</th><th scope="col">Citizen</th><th scope="col">Hazard category</th><th scope="col">Location</th><th scope="col">GPS coordinates</th><th scope="col">Report date</th><th scope="col">Uploaded image</th><th scope="col">AI result</th><th scope="col">Severity assessed</th><th scope="col">Status / smart priority</th><th scope="col">Actions</th></tr></thead>
+            <tbody id="report-table-body"></tbody>
+          </table>
+          <p class="admin-empty-state" id="empty-reports" hidden>No reports match your search.</p>
+        </div>
+      </section>
+
+      <section class="dashboard-section admin-panel ai-detection-section" id="ai-detection" aria-labelledby="admin-ai-detection-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">IMAGE-BASED ROAD REVIEW</p><h2 id="admin-ai-detection-title">AI image analysis</h2><p class="section-subtitle">Upload an image for inference or review detections made by a configured road-damage checkpoint. Model results are not confirmed hazards.</p></div><span class="section-icon"><svg><use href="#admin-icon-photo"></use></svg></span></div>
+        <form class="ai-upload-form" data-ai-detection-form data-ai-role="admin">
+          <div class="dashboard-field">
+            <label for="admin-ai-image">Road image</label>
+            <label class="upload-area" for="admin-ai-image">
+              <span class="upload-icon"><svg><use href="#admin-icon-photo"></use></svg></span>
+              <span><strong>Choose a road image</strong><small>JPG or PNG · up to 5 MB</small></span>
+              <input id="admin-ai-image" data-ai-image type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+            </label>
+          </div>
+          <div class="ai-image-preview" data-ai-preview hidden></div>
+          <div class="report-form-actions">
+            <p class="required-note">A trained road-damage model must be configured for inference.</p>
+            <button class="button button-green button-large" type="submit">Analyze Road Image</button>
+          </div>
+          <div class="ai-progress-wrap" data-ai-progress-wrap hidden>
+            <progress class="ai-progress" aria-label="Uploading and validating image"></progress>
+            <p data-ai-progress-text role="status" aria-live="polite"></p>
+          </div>
+          <p class="report-feedback" data-ai-feedback role="status" aria-live="polite" hidden></p>
+          <div data-ai-current-result></div>
+        </form>
+        <h3 class="ai-review-heading">Images awaiting administrator review</h3>
+        <div class="ai-detection-history" data-ai-admin-queue aria-live="polite"></div>
+        <p class="admin-empty-state" data-ai-admin-empty hidden>No images are awaiting manual review.</p>
+      </section>
+
+      <section class="dashboard-section admin-panel" id="hazard-management" aria-labelledby="hazard-management-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">APPROVED ROAD RISKS</p><h2 id="hazard-management-title">Hazard management</h2><p class="section-subtitle">Hazard markers and statuses come from the shared database. Resolved hazards leave driver alerts.</p></div><span class="map-demo-label"><span></span> DATABASE HAZARDS</span></div>
+        <div class="admin-filter-row">
+          <label class="admin-filter-control"><span>Category</span><select id="hazard-category-filter"><option value="all">All categories</option><option>Pothole</option><option>Damaged Road</option><option>Broken Streetlight</option><option>Waterlogging</option><option>Road Obstruction</option></select></label>
+          <label class="admin-filter-control"><span>Severity</span><select id="hazard-severity-filter"><option value="all">All severities</option><option>High</option><option>Medium</option><option>Low</option></select></label>
+          <label class="admin-filter-control"><span>Status</span><select id="hazard-status-filter"><option value="all">All statuses</option><option>Active</option><option>Assigned</option><option>Resolved</option></select></label>
+        </div>
+        <div class="admin-map-layout">
+          <div class="admin-map-shell"><div id="admin-hazard-map" role="application" aria-label="Map of database road hazards"></div><p class="admin-map-error" id="admin-map-error" role="status" hidden></p></div>
+          <div class="admin-map-side"><div class="admin-map-legend"><strong>HAZARD MAP LEGEND</strong><span><i class="admin-legend-dot severity-high-dot"></i>High severity</span><span><i class="admin-legend-dot severity-medium-dot"></i>Medium severity</span><span><i class="admin-legend-dot severity-low-dot"></i>Low severity</span><span class="admin-map-note">Map tiles © OpenStreetMap contributors.</span></div><div class="admin-map-count"><span>Visible hazards</span><strong id="visible-hazard-count">—</strong></div></div>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="reports-table admin-table admin-hazard-table">
+            <thead><tr><th scope="col">Hazard ID</th><th scope="col">Category</th><th scope="col">Location</th><th scope="col">GPS</th><th scope="col">Severity / priority</th><th scope="col">Status</th><th scope="col">Assigned worker</th></tr></thead>
+            <tbody id="hazard-table-body"></tbody>
+          </table>
+          <p class="admin-empty-state" id="empty-hazards" hidden>No hazards match the selected filters.</p>
+        </div>
+      </section>
+
+      <section class="dashboard-section admin-panel" id="worker-management" aria-labelledby="worker-management-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">WORKER API</p><h2 id="worker-management-title">Worker management</h2><p class="section-subtitle">Profiles, skills, workload, availability and location are loaded from the database.</p><p class="section-subtitle" id="repair-task-summary">Loading repair tasks from the database…</p></div><span class="table-count" id="worker-count">Loading…</span></div>
+        <label class="admin-search admin-worker-search"><svg><use href="#admin-icon-search"></use></svg><input id="worker-search" type="search" placeholder="Search workers, skills or location" aria-label="Search workers"></label>
+        <div class="admin-table-wrap">
+          <table class="reports-table admin-table">
+            <thead><tr><th scope="col">Worker ID</th><th scope="col">Worker name</th><th scope="col">Skills</th><th scope="col">Current workload</th><th scope="col">Availability</th><th scope="col">Location</th><th scope="col">Action</th></tr></thead>
+            <tbody id="worker-table-body"></tbody>
+          </table>
+          <p class="admin-empty-state" id="empty-workers" hidden>No active worker profiles are available in the database.</p>
+        </div>
+      </section>
+
+      <section class="dashboard-section admin-panel" id="task-allocation" aria-labelledby="allocation-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">RULE-BASED SUGGESTIONS</p><h2 id="allocation-title">Worker allocation</h2><p class="section-subtitle">Choose an active, verified database hazard to rank available workers.</p></div><span class="section-icon"><svg><use href="#admin-icon-tools"></use></svg></span></div>
+        <div class="allocation-explainer"><strong>Transparent rule score · not a trained AI model</strong><p>Skill match: 40 points; availability: 25; distance: up to 20 (2 points deducted per kilometer); workload: up to 15. High priority applies the strictest workload penalty. The server recalculates before assigning; an administrator confirms the assignment.</p></div>
+        <form class="allocation-form" id="allocation-form" novalidate>
+          <div class="dashboard-field"><label for="allocation-hazard">Approved hazard</label><select id="allocation-hazard" required><option value="">Select an unassigned hazard</option></select></div>
+          <button class="button button-green" type="submit"><svg><use href="#admin-icon-search"></use></svg>Rank available workers</button>
+        </form>
+        <p class="admin-empty-state" id="empty-allocation-hazards" hidden>No active, verified hazards are available for assignment.</p>
+        <p class="allocation-feedback" id="allocation-feedback" role="status" aria-live="polite" hidden></p>
+        <div class="allocation-results" id="allocation-results" hidden></div>
+      </section>
+
+      <section class="dashboard-section admin-panel" id="volunteer-management" aria-labelledby="volunteer-management-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">COMMUNITY PROGRAMS</p><h2 id="volunteer-management-title">Volunteer management</h2><p class="section-subtitle">Activities appear inside the Worker Dashboard. There is no separate volunteer account or role.</p></div><span class="section-icon"><svg><use href="#admin-icon-volunteer"></use></svg></span></div>
+        <form class="admin-create-form" id="volunteer-create-form" novalidate>
+          <div class="admin-create-form-heading"><strong>Create optional activity</strong><span>Participation is voluntary and separate from paid work.</span></div>
+          <div class="admin-create-grid">
+            <div class="dashboard-field"><label for="activity-name">Activity name <span>*</span></label><input id="activity-name" name="name" type="text" maxlength="80" placeholder="e.g. Road condition inspection" required></div>
+            <div class="dashboard-field"><label for="activity-location">Location <span>*</span></label><input id="activity-location" name="location" type="text" maxlength="120" placeholder="Area or landmark" required></div>
+            <div class="dashboard-field"><label for="activity-date">Date <span>*</span></label><input id="activity-date" name="date" type="date" required></div>
+            <div class="dashboard-field"><label for="activity-volunteers">Required volunteers <span>*</span></label><input id="activity-volunteers" name="requiredVolunteers" type="number" min="1" max="500" value="4" required></div>
+            <div class="dashboard-field"><label for="activity-points">Volunteer points</label><input id="activity-points" name="points" type="number" min="0" max="500" value="20"></div>
+            <div class="dashboard-field field-full"><label for="activity-description">Description <span>*</span></label><textarea id="activity-description" name="description" rows="3" maxlength="400" placeholder="Explain what volunteers will do." required></textarea></div>
+          </div>
+          <div class="report-form-actions"><p class="required-note"><span>*</span> Required fields</p><button class="button button-green" type="submit">Create activity</button></div>
+          <p class="admin-inline-feedback" id="activity-form-feedback" role="status" aria-live="polite" hidden></p>
+        </form>
+        <div class="admin-table-tools volunteer-table-heading"><h3>Activities and registrations</h3><span class="table-count" id="activity-count">Loading…</span></div>
+        <div class="admin-table-wrap">
+          <table class="reports-table admin-table">
+            <thead><tr><th scope="col">Activity</th><th scope="col">Location / date</th><th scope="col">Volunteers</th><th scope="col">Registered volunteers</th><th scope="col">Status</th><th scope="col">Action</th></tr></thead>
+            <tbody id="activity-table-body"></tbody>
+          </table>
+          <p class="admin-empty-state" id="empty-activities" hidden>No volunteer activities have been created.</p>
+        </div>
+      </section>
+
+      <section class="dashboard-section admin-panel" id="repair-verification" aria-labelledby="verification-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">ADMIN ACTION REQUIRED</p><h2 id="verification-title">Repair verification</h2><p class="section-subtitle">Compare database-stored before-and-after photos, GPS coordinates, and completion time before taking action.</p></div><span class="table-count" id="verification-count">Loading…</span></div>
+        <div class="verification-list" id="verification-list"></div>
+        <p class="admin-empty-state" id="empty-verifications" hidden>No repair submissions are awaiting verification. Workers can submit completion evidence from the Worker Dashboard.</p>
+      </section>
+
+      <section class="dashboard-section admin-panel" id="rewards-management" aria-labelledby="rewards-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">REWARD ACCOUNTING</p><h2 id="rewards-title">Rewards management</h2><p class="section-subtitle">Repair rewards count only administrator-verified repairs. Volunteer points remain a separate total.</p></div><span class="section-icon"><svg><use href="#admin-icon-award"></use></svg></span></div>
+        <div class="admin-table-wrap">
+          <table class="reports-table admin-table">
+            <thead><tr><th scope="col">Worker</th><th scope="col">Completed repair tasks</th><th scope="col">Verified repairs</th><th scope="col">Volunteer activities</th><th scope="col">Repair reward points</th><th scope="col">Volunteer points</th><th scope="col">Total</th></tr></thead>
+            <tbody id="rewards-table-body"></tbody>
+          </table>
+          <p class="admin-empty-state" id="empty-rewards" hidden>No worker reward records are available.</p>
+        </div>
+      </section>
+
+      <section class="dashboard-section admin-panel" id="analytics" aria-labelledby="analytics-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">DATABASE METRICS</p><h2 id="analytics-title">Analytics</h2><p class="section-subtitle">Charts summarize records returned by the authenticated APIs; these are operational counts, not predictive AI.</p></div><span class="section-icon"><svg><use href="#admin-icon-chart"></use></svg></span></div>
+        <p class="analytics-library-warning" id="analytics-library-warning" role="status" hidden>Chart.js could not be loaded. Check your internet connection to view charts.</p>
+        <div class="admin-chart-grid">
+          <article class="admin-chart-card"><div><h3>Hazards by category</h3><span>Active and resolved records</span></div><div class="admin-chart-canvas"><canvas id="chart-hazard-category" aria-label="Hazards by category chart"></canvas></div></article>
+          <article class="admin-chart-card"><div><h3>Reports by status</h3><span>Current report review states</span></div><div class="admin-chart-canvas"><canvas id="chart-report-status" aria-label="Reports by status chart"></canvas></div></article>
+          <article class="admin-chart-card"><div><h3>Monthly completed repairs</h3><span>Verified database records</span></div><div class="admin-chart-canvas"><canvas id="chart-monthly-repairs" aria-label="Monthly completed repairs chart"></canvas></div></article>
+          <article class="admin-chart-card"><div><h3>Priority distribution</h3><span>Unresolved approved hazards</span></div><div class="admin-chart-canvas"><canvas id="chart-priority" aria-label="Hazards by priority chart"></canvas></div></article>
+          <article class="admin-chart-card admin-chart-wide"><div><h3>Worker performance</h3><span>Verified repairs and completed volunteer activities</span></div><div class="admin-chart-canvas admin-chart-wide-canvas"><canvas id="chart-worker-performance" aria-label="Worker performance chart"></canvas></div></article>
+        </div>
+      </section>
+
+      <section class="dashboard-section notifications-section" id="notifications" aria-labelledby="notifications-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">ADMIN UPDATES</p><h2 id="notifications-title">Notifications</h2></div><span class="notification-badge" data-notifications-status>Loading</span></div>
+        <div class="notification-list" data-notifications-list aria-live="polite"></div>
+        <p class="admin-empty-state" data-notifications-empty hidden>No notifications yet.</p>
+      </section>
+
+      <footer class="dashboard-footer"><span>© 2026 ROADGUARD AI</span><span>Database-backed review and allocation workflows</span></footer>
+    </div>
+  </main>
+
+  <dialog class="admin-report-dialog" id="admin-report-dialog" aria-labelledby="report-dialog-title">
+    <div class="admin-dialog-header"><div><p class="dashboard-kicker">REPORT REVIEW</p><h2 id="report-dialog-title">Report details</h2></div><button class="admin-dialog-close" type="button" aria-label="Close report details">×</button></div>
+    <div class="admin-dialog-content" id="report-dialog-content"></div>
+    <div class="admin-dialog-actions"><button class="button button-outline" id="report-dialog-close" type="button">Close</button></div>
+  </dialog>
+
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script defer src="js/api-config.js"></script>
+  <script defer src="js/notifications.js"></script>
+  <script defer src="js/session.js"></script>
+  <script defer src="js/admin.js"></script>
+  <script defer src="js/ai-detection.js"></script>
+</body>
+</html>

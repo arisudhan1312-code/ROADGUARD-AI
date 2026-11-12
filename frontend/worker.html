@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071827">
+  <meta name="description" content="ROADGUARD AI worker dashboard for assigned road repairs, completion evidence and optional community activities.">
+  <title>Worker Dashboard | ROADGUARD AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page worker-page">
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="worker-icon-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></symbol>
+    <symbol id="worker-icon-tools" viewBox="0 0 24 24"><path d="m14 7 3-3 4 4-3 3m-4-4L8 13l3 3 6-6m-9 3-4 1-1 6 6-1 1-4m3-1 6 6"/></symbol>
+    <symbol id="worker-icon-community" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="worker-icon-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="worker-icon-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="m8.2 13-1.2 9 5-3 5 3-1.2-9"/></symbol>
+    <symbol id="worker-icon-profile" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></symbol>
+    <symbol id="worker-icon-logout" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3"/><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/></symbol>
+    <symbol id="worker-icon-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="worker-icon-road" viewBox="0 0 24 24"><path d="M8 3 5 21m11-18 3 18M12 5v3m0 4v3m0 4v2"/></symbol>
+    <symbol id="worker-icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="worker-icon-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="worker-icon-gps" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></symbol>
+    <symbol id="worker-icon-upload" viewBox="0 0 24 24"><path d="M12 16V4m-5 5 5-5 5 5"/><path d="M4 16v4h16v-4"/></symbol>
+    <symbol id="worker-icon-warning" viewBox="0 0 24 24"><path d="m10.3 3.9-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3.1l-8-14a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 4h.01"/></symbol>
+    <symbol id="worker-icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></symbol>
+    <symbol id="worker-icon-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></symbol>
+    <symbol id="worker-icon-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+  </svg>
+
+  <button class="sidebar-overlay" type="button" aria-label="Close navigation menu" tabindex="-1"></button>
+  <aside class="dashboard-sidebar" id="worker-sidebar">
+    <a class="brand dashboard-brand" href="index.html" aria-label="ROADGUARD AI home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none"><path d="M12 4h8l6 24h-6l-1.3-6h-5.4L12 28H6l6-24Z" fill="currentColor"/><path d="m16 8-.8 4h1.6L16 8Zm-1.5 9h3l-.5-2.5h-2l-.5 2.5Z" fill="#071827"/></svg>
+      </span>
+      <span class="brand-name">ROADGUARD <span>AI</span></span>
+    </a>
+
+    <div class="sidebar-user">
+      <span class="user-avatar">W</span>
+      <span><strong>Worker Portal</strong><small>Live worker workspace</small></span>
+    </div>
+
+    <p class="sidebar-label">WORKER TOOLS</p>
+    <nav class="dashboard-nav" aria-label="Worker dashboard">
+      <a class="dashboard-nav-link is-active" href="#worker-dashboard" aria-current="page"><svg><use href="#worker-icon-dashboard"></use></svg><span>Dashboard</span></a>
+      <a class="dashboard-nav-link" href="#official-tasks"><svg><use href="#worker-icon-tools"></use></svg><span>My Repair Tasks</span><span class="nav-count" id="task-nav-count">—</span></a>
+      <a class="dashboard-nav-link" href="#volunteer-activities"><svg><use href="#worker-icon-community"></use></svg><span>Volunteer Activities</span><span class="nav-count" id="activity-nav-count">—</span></a>
+      <a class="dashboard-nav-link" href="#completed-tasks"><svg><use href="#worker-icon-check"></use></svg><span>Completed Tasks</span></a>
+      <a class="dashboard-nav-link" href="#rewards"><svg><use href="#worker-icon-award"></use></svg><span>Rewards and Points</span></a>
+      <a class="dashboard-nav-link" href="#notifications"><svg><use href="#worker-icon-community"></use></svg><span>Notifications</span><span class="nav-count" data-notification-count hidden>0</span></a>
+      <a class="dashboard-nav-link" href="#profile"><svg><use href="#worker-icon-profile"></use></svg><span>Profile</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-demo"><span class="demo-indicator"></span><span><strong>API-backed workflows</strong><small>Worker data loads from Flask when available</small></span></div>
+      <a class="dashboard-nav-link logout-link" href="index.html" data-logout><svg><use href="#worker-icon-logout"></use></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main class="dashboard-main" id="worker-dashboard">
+    <header class="dashboard-topbar">
+      <button class="sidebar-toggle" type="button" aria-label="Open dashboard menu" aria-expanded="false" aria-controls="worker-sidebar"><svg><use href="#worker-icon-menu"></use></svg></button>
+      <div class="topbar-context"><span class="breadcrumb-muted">Workspace</span><span aria-hidden="true">/</span><strong>Worker Dashboard</strong></div>
+      <div class="topbar-right"><span class="demo-pill"><span></span> API DATA</span><span class="topbar-avatar" aria-label="Worker profile">W</span></div>
+    </header>
+
+    <div class="dashboard-content worker-content">
+      <section class="dashboard-welcome worker-welcome" aria-labelledby="worker-welcome-title">
+        <div>
+          <p class="dashboard-kicker">ROAD MAINTENANCE WORKSPACE</p>
+          <h1 id="worker-welcome-title">Make every repair <span>count.</span></h1>
+          <p>Manage assigned repair duties and keep optional community activities in one place.</p>
+        </div>
+        <a class="button button-green button-large" href="#official-tasks"><svg><use href="#worker-icon-tools"></use></svg> View repair tasks</a>
+      </section>
+
+      <div class="worker-demo-notice" role="note">
+        <svg><use href="#worker-icon-warning"></use></svg>
+        <p><strong>Database-backed workspace.</strong> Tasks, repair evidence, optional volunteer activities, reward totals and notifications are requested from authenticated APIs. Repair rewards are added only after administrator verification.</p>
+      </div>
+      <p class="worker-feedback" id="worker-feedback" role="status" aria-live="polite" tabindex="-1" hidden></p>
+
+      <section class="dashboard-section" aria-labelledby="worker-overview-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">YOUR WORKSPACE</p><h2 id="worker-overview-title">Work overview</h2></div>
+          <span class="updated-label"><span class="demo-indicator"></span><span id="storage-status">Loading tasks from Flask API…</span></span>
+        </div>
+        <div class="summary-grid worker-summary-grid">
+          <article class="summary-card">
+            <div class="summary-card-top"><span class="summary-icon summary-icon-green"><svg><use href="#worker-icon-tools"></use></svg></span><span class="summary-trend">OFFICIAL</span></div>
+            <strong class="summary-value" id="assigned-task-count">—</strong><span class="summary-label">Assigned repair tasks</span>
+            <div class="summary-foot">Including work in progress</div>
+          </article>
+          <article class="summary-card">
+            <div class="summary-card-top"><span class="summary-icon summary-icon-amber"><svg><use href="#worker-icon-clock"></use></svg></span><span class="summary-trend">IN PROGRESS</span></div>
+            <strong class="summary-value" id="pending-task-count">—</strong><span class="summary-label">Pending tasks</span>
+            <div class="summary-foot">Assigned, accepted or underway</div>
+          </article>
+          <article class="summary-card">
+            <div class="summary-card-top"><span class="summary-icon summary-icon-blue"><svg><use href="#worker-icon-check"></use></svg></span><span class="summary-trend">REPAIR STATUS</span></div>
+            <strong class="summary-value" id="completed-repair-count">—</strong><span class="summary-label">Completed repairs</span>
+            <div class="summary-foot">Awaiting verification or verified</div>
+          </article>
+          <article class="summary-card">
+            <div class="summary-card-top"><span class="summary-icon summary-icon-purple"><svg><use href="#worker-icon-star"></use></svg></span><span class="summary-trend">VOLUNTEER</span></div>
+            <strong class="summary-value" id="overview-volunteer-points">—</strong><span class="summary-label">Volunteer points</span>
+            <div class="summary-foot">Separate from repair rewards</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="dashboard-section worker-panel" id="official-tasks" aria-labelledby="official-tasks-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">OFFICIAL PAID DUTIES · DATABASE</p><h2 id="official-tasks-title">My repair tasks</h2><p class="section-subtitle">Tasks are limited to the worker account signed in to the Flask API.</p></div>
+          <span class="table-count" id="task-list-count">Loading…</span>
+        </div>
+        <div class="worker-card-list" id="official-task-list"></div>
+        <p class="worker-empty-state" id="empty-task-list" hidden>No repair tasks are currently assigned.</p>
+      </section>
+
+      <section class="dashboard-section worker-panel volunteer-panel" id="volunteer-activities" aria-labelledby="volunteer-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">OPTIONAL COMMUNITY CONTRIBUTION</p><h2 id="volunteer-title">Volunteer activities</h2><p class="section-subtitle">Join an activity only if you choose. Volunteering is separate from paid repair work.</p></div>
+          <span class="section-icon"><svg><use href="#worker-icon-community"></use></svg></span>
+        </div>
+        <div class="worker-card-list volunteer-card-list" id="volunteer-activity-list"></div>
+      </section>
+
+      <section class="dashboard-section worker-panel evidence-panel" id="task-evidence" aria-labelledby="evidence-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">ADMIN REVIEW REQUIRED</p><h2 id="evidence-title">Submit repair evidence</h2><p class="section-subtitle">Before-and-after photos and completion GPS are saved for administrator review.</p></div>
+          <span class="section-icon"><svg><use href="#worker-icon-upload"></use></svg></span>
+        </div>
+        <form class="worker-evidence-form" id="evidence-form" novalidate>
+          <div class="worker-evidence-grid">
+            <div class="dashboard-field">
+              <label for="evidence-task">Repair task <span>*</span></label>
+              <select id="evidence-task" name="taskId" required>
+                <option value="">Select an in-progress task</option>
+              </select>
+            </div>
+            <div class="worker-gps-field">
+              <span class="worker-field-label">Completion GPS location <span>*</span></span>
+              <button class="button button-outline worker-gps-button" id="capture-completion-gps" type="button"><svg><use href="#worker-icon-gps"></use></svg> Capture current GPS</button>
+              <p class="gps-coordinate-text" id="completion-gps-coordinates" role="status" aria-live="polite">GPS location has not been captured.</p>
+            </div>
+            <div class="dashboard-field field-full">
+              <label for="repair-description">Repair description <span>*</span></label>
+              <textarea id="repair-description" name="repairDescription" rows="3" minlength="10" maxlength="2000" placeholder="Describe the repair work completed." required></textarea>
+            </div>
+            <div class="dashboard-field">
+              <label for="before-repair-photo">Before repair photo <span>*</span></label>
+              <label class="upload-area worker-upload-area" for="before-repair-photo">
+                <span class="upload-icon"><svg><use href="#worker-icon-upload"></use></svg></span>
+                <span><strong>Choose before photo</strong><small>Image file · maximum 1 MB</small></span>
+                <input id="before-repair-photo" name="beforePhoto" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+              </label>
+              <div class="worker-photo-preview" id="before-photo-preview" hidden><img alt="Before repair photo preview"><span></span></div>
+            </div>
+            <div class="dashboard-field">
+              <label for="after-repair-photo">After repair photo <span>*</span></label>
+              <label class="upload-area worker-upload-area" for="after-repair-photo">
+                <span class="upload-icon"><svg><use href="#worker-icon-upload"></use></svg></span>
+                <span><strong>Choose after photo</strong><small>Image file · maximum 1 MB</small></span>
+                <input id="after-repair-photo" name="afterPhoto" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+              </label>
+              <div class="worker-photo-preview" id="after-photo-preview" hidden><img alt="After repair photo preview"><span></span></div>
+            </div>
+          </div>
+          <p class="worker-evidence-note">Each image must be JPG, JPEG, or PNG and no larger than 5 MB. Submitted repairs remain pending until an administrator reviews them.</p>
+          <div class="report-form-actions">
+            <p class="required-note"><span>*</span> Required to submit completion</p>
+            <button class="button button-green button-large" id="submit-evidence" type="submit"><svg><use href="#worker-icon-check"></use></svg> Submit completion</button>
+          </div>
+          <p class="worker-inline-feedback" id="evidence-feedback" role="status" aria-live="polite" tabindex="-1" hidden></p>
+        </form>
+      </section>
+
+      <section class="dashboard-section worker-panel" id="completed-tasks" aria-labelledby="completed-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">REPAIR RECORD</p><h2 id="completed-title">Completed tasks</h2><p class="section-subtitle">Task completion and evidence review status are loaded from the database.</p></div>
+          <span class="table-count" id="completed-task-count">Loading…</span>
+        </div>
+        <div class="worker-card-list" id="completed-task-list"></div>
+        <p class="worker-empty-state" id="empty-completed-list" hidden>No completed repair tasks yet.</p>
+      </section>
+
+      <section class="dashboard-section worker-panel" id="rewards" aria-labelledby="rewards-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">DATABASE TOTALS</p><h2 id="rewards-title">Rewards and points</h2><p class="section-subtitle">Official repair rewards and volunteer points are separate totals from verified records.</p></div>
+          <span class="section-icon"><svg><use href="#worker-icon-award"></use></svg></span>
+        </div>
+        <div class="summary-grid worker-reward-grid">
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-blue"><svg><use href="#worker-icon-check"></use></svg></span><span class="summary-trend">ALL REPAIRS</span></div><strong class="summary-value" id="reward-completed-repairs">—</strong><span class="summary-label">Completed repair tasks</span><div class="summary-foot">Includes work awaiting review</div></article>
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-green"><svg><use href="#worker-icon-award"></use></svg></span><span class="summary-trend">ADMIN VERIFIED</span></div><strong class="summary-value" id="verified-repair-count">—</strong><span class="summary-label">Verified repairs</span><div class="summary-foot">Confirmed by an administrator</div></article>
+          <article class="summary-card"><div class="summary-card-top"><span class="summary-icon summary-icon-purple"><svg><use href="#worker-icon-community"></use></svg></span><span class="summary-trend">OPTIONAL</span></div><strong class="summary-value" id="completed-activity-count">—</strong><span class="summary-label">Volunteer activities completed</span><div class="summary-foot">Does not replace paid duties</div></article>
+          <article class="summary-card worker-total-points-card"><div class="summary-card-top"><span class="summary-icon summary-icon-amber"><svg><use href="#worker-icon-star"></use></svg></span><span class="summary-trend">COMBINED TOTAL</span></div><strong class="summary-value" id="total-earned-points">—</strong><span class="summary-label">Total earned points</span><div class="summary-foot">Repair rewards + volunteer points</div></article>
+        </div>
+        <div class="worker-points-breakdown">
+          <div><span class="points-breakdown-icon repair-points-icon"><svg><use href="#worker-icon-tools"></use></svg></span><span><strong>Repair rewards</strong><small>Granted only after admin verification</small></span><strong class="points-breakdown-value"><span id="repair-reward-points">—</span> pts</strong></div>
+          <div><span class="points-breakdown-icon volunteer-points-icon"><svg><use href="#worker-icon-community"></use></svg></span><span><strong>Volunteer points</strong><small>Credited after administrator approval</small></span><strong class="points-breakdown-value"><span id="volunteer-reward-points">—</span> pts</strong></div>
+        </div>
+        <div class="worker-achievements">
+          <div class="worker-achievement-heading"><h3>Achievement badges</h3><span>BASED ON VERIFIED RECORDS</span></div>
+          <div class="worker-badge-list" id="achievement-list"></div>
+        </div>
+      </section>
+
+      <section class="dashboard-section worker-panel" id="profile" aria-labelledby="profile-title">
+        <div class="dashboard-section-heading">
+          <div><p class="dashboard-kicker">ACCOUNT DETAILS</p><h2 id="profile-title">Profile</h2><p class="section-subtitle">Loaded from the signed-in worker profile when the API is available.</p></div>
+          <span class="section-icon"><svg><use href="#worker-icon-profile"></use></svg></span>
+        </div>
+        <div class="worker-profile-card">
+          <span class="worker-profile-avatar">W</span>
+          <div class="worker-profile-details"><h3 id="worker-profile-name">Loading profile…</h3><p id="worker-profile-role">Worker profile from Flask API</p><div><span>Worker ID</span><strong id="worker-profile-id">Not loaded</strong><span>Location</span><strong id="worker-profile-location">Not configured</strong><span>Contact</span><strong id="worker-profile-email">Not loaded</strong></div></div>
+          <span class="worker-profile-tag" id="worker-profile-tag"><i></i> API profile pending</span>
+        </div>
+      </section>
+
+      <section class="dashboard-section notifications-section" id="notifications" aria-labelledby="notifications-title">
+        <div class="dashboard-section-heading"><div><p class="dashboard-kicker">STAY INFORMED</p><h2 id="notifications-title">Notifications</h2></div><span class="notification-badge" data-notifications-status>Loading</span></div>
+        <div class="notification-list" data-notifications-list aria-live="polite"></div>
+        <p class="worker-empty-state" data-notifications-empty hidden>No notifications yet.</p>
+      </section>
+
+      <footer class="dashboard-footer"><span>© 2026 ROADGUARD AI</span><span>Repair submissions are not verified automatically</span></footer>
+    </div>
+  </main>
+  <script defer src="js/api-config.js"></script>
+  <script defer src="js/notifications.js"></script>
+  <script defer src="js/session.js"></script>
+  <script defer src="js/worker.js"></script>
+</body>
+</html>
