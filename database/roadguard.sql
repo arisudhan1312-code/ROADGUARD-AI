@@ -360,3 +360,18 @@ INSERT IGNORE INTO workers (worker_id, skills, availability)
 SELECT id, JSON_ARRAY(), 'Available'
 FROM users
 WHERE role = 'worker';
+
+-- -----------------------------------------------------------------------
+-- Bootstrap admin account
+-- Email   : ariharasudhan1312@gmail.com
+-- Password: arisudhan2008  (Werkzeug pbkdf2:sha256 hash, 260000 iterations)
+-- -----------------------------------------------------------------------
+INSERT IGNORE INTO users (full_name, email, mobile, password_hash, role, status)
+VALUES (
+  'Admin',
+  'ariharasudhan1312@gmail.com',
+  '0000000000',
+  'pbkdf2:sha256:260000$r1hCgkmCfcomKEP8tw72PA==$yjgGVIos44noE4VJVPuMvWTu5BG+OZJmQRgQELh5RPI=',
+  'admin',
+  'active'
+);
