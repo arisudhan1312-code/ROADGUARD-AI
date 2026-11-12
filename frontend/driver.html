@@ -143,6 +143,10 @@
             <button class="button button-green gps-action-button" id="start-tracking" type="button"><svg><use href="#driver-icon-gps"></use></svg>Start GPS tracking</button>
             <button class="button button-outline gps-action-button" id="stop-tracking" type="button" disabled>Stop tracking</button>
           </div>
+        <div style="margin-top:0.75rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+          <button class="button button-outline" id="enable-push-btn" type="button">🔔 Enable Background Notifications</button>
+          <span id="push-status" style="font-size:0.85rem"></span>
+        </div>
         </div>
         <p class="gps-message" id="gps-message" role="status" aria-live="polite">Sign in as a driver, then start GPS tracking to load nearby verified hazards.</p>
         <div class="warning-panel" id="proximity-warning" role="alert" aria-live="assertive" hidden>
@@ -217,6 +221,14 @@
   <script defer src="js/api-config.js"></script>
   <script defer src="js/notifications.js"></script>
   <script defer src="js/session.js"></script>
+  <script defer src="js/push-manager.js"></script>
   <script defer src="js/driver.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded",function(){
+      var btn=document.getElementById("enable-push-btn");
+      var st=document.getElementById("push-status");
+      if(btn&&window.RoadguardPush){btn.addEventListener("click",function(){btn.disabled=true;window.RoadguardPush.enablePushNotifications(st).finally(function(){btn.disabled=false;});});}
+    });
+  </script>
 </body>
 </html>

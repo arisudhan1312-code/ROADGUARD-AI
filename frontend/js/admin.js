@@ -1237,3 +1237,85 @@ document.querySelector("#report-dialog-close").addEventListener("click", closeRe
 initializeHazardMap();
 void refreshDashboard();
 window.setInterval(refreshDashboard, 60_000);
+
+
+// ============================================================
+// ADMIN MESSAGING
+// ============================================================
+(function initAdminMessaging() {
+  const form = document.querySelector("#admin-messaging-form");
+  if (!form) return;
+  const targetSelect = document.querySelector("#msg-target");
+  const sendBtn = document.querySelector("#send-message-btn");
+  const feedback = document.querySelector("#messaging-feedback");
+  const historyBody = document.querySelector("#messaging-history-body");
+  const historyEmpty = document.querySelector("#messaging-history-empty");
+  const refreshBtn = document.querySelector("#refresh-sent-btn");
+
+  async function loadDriversForMessaging() {
+    try {
+      const result = await adminApiRequest("/notifications/admin/drivers");
+      while (targetSelect.options.length > 1) targetSelect.remove(1);
+      (result.drivers || []).forEach((d) => {
+        const opt = document.createElement("option");
+        opt.value = String(d.id);
+        opt.textContent = `\u{1F464} ${d.full_name} (${d.email})`;
+        targetSelect.append(opt);
+      });
+    } catch (err) { console.warn("Driver list load failed:", err.message); }
+  }
+
+  function showFeedback(msg, isError) {
+    feedback.textContent = msg;
+    feedback.hidden = false;
+    feedback.style.color = isError ? "#f87171" : "#34d399";
+  }
+
+  async function loadSentHistory() {
+    try {
+      const result = await adminApiRequest("/notifications/admin/sent");
+      const items = result.notifications || [];
+      historyBody.replaceChildren();
+      historyEmpty.hidden = items.length > 0;
+      items.forEach((item) => {
+        const tr = document.createElement("tr");
+        [item.notification_type || "—", item.title || "—", item.message || "—",
+         item.recipient_count != null ? item.recipient_count : "—",
+         item.created_at ? new Date(item.created_at.replace(" ","T")).toLocaleString() : "—"
+        ].forEach((val) => { const td = document.createElement("td"); td.textContent = val; tr.append(td); });
+        historyBody.append(tr);
+      });
+    } catch (err) {
+      historyEmpty.textContent = "Could not load sent messages.";
+      historyEmpty.hidden = false;
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const title = document.querySelector("#msg-title").value.trim();
+    const message = document.querySelector("#msg-body").value.trim();
+    const target = targetSelect.value;
+    const message_type = document.querySelector("#msg-type").value;
+    if (!title || !message) { showFeedback("Fill in both title and message.", true); return; }
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending\u2026";
+    feedback.hidden = true;
+    try {
+      const result = await adminApiRequest("/notifications/admin/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ target, message_type, title, message })
+      });
+      showFeedback("\u2705 " + result.message, false);
+      form.reset();
+      if (targetSelect.options.length > 0) targetSelect.selectedIndex = 0;
+      loadSentHistory();
+    } catch (err) { showFeedback("\u274C " + err.message, true); }
+    finally { sendBtn.disabled = false; sendBtn.textContent = "Send Message"; }
+  });
+
+  refreshBtn?.addEventListener("click", loadSentHistory);
+  loadDriversForMessaging();
+  loadSentHistory();
+})();

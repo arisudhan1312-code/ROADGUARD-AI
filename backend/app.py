@@ -16,6 +16,7 @@ from citizen import citizen_blueprint
 from database import get_db_connection
 from driver import driver_blueprint
 from notifications import notifications_blueprint
+from push_notifications import push_blueprint
 from worker import worker_blueprint
 
 
@@ -109,6 +110,7 @@ def create_app():
     app.register_blueprint(driver_blueprint)
     app.register_blueprint(worker_blueprint)
     app.register_blueprint(notifications_blueprint)
+    app.register_blueprint(push_blueprint)
 
     @app.errorhandler(413)
     def request_too_large(_error):
