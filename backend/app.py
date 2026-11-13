@@ -179,6 +179,14 @@ def create_app():
 
 app = create_app()
 
+# Auto-create tables on first deploy
+try:
+    from init_db import init_database
+    with app.app_context():
+        init_database()
+except Exception as _db_init_err:
+    print(f"⚠️  Database init skipped: {_db_init_err}")
+
 
 if __name__ == "__main__":
     debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
